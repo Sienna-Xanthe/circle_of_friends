@@ -22,6 +22,15 @@ class User extends Model
     public function getTip(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Tip::class,'user_id');
+      }
+
+    //连接动态表，与该动态的用户信息进行绑定
+    public function dynamics(){
+        return $this->belongsTo(Dynamics::class,'user_id');
+    }
+    public function comment(){
+        return $this->belongsTo(Comment::class,'user_id');
+
     }
 
     /**
@@ -90,6 +99,7 @@ class User extends Model
     }
 
 
+
     /**
      * 查询用户信息
      */
@@ -107,11 +117,40 @@ class User extends Model
                     'user_qq'
                 ])
                 ->get();
+           return $res ?
+                $res :
+                false;
+        } catch (\Exception $e) {
+          logError('搜索错误', [$e->getMessage()]);
+             return false;
+        }
+    }
+
+
+    /**
+     * 管理员管理用户
+     * @author zqz
+     * @param $user_name
+     * @return false
+     */
+    public static function establishphoto3($user_name)
+    {
+        try {
+            //如果不传姓名，查询全部的用户
+            if ($user_name==null){
+                $res=self::select('user_id','user_name','user_nickname','user_phone','user_state1')->paginate(5);
+            }else{
+                //姓名进行选择查询
+                $res=self::select('user_id','user_name','user_nickname','user_phone','user_state1')
+                    ->where('user_name','like','%'.$user_name.'%')->paginate(5);
+            }
+
             return $res ?
                 $res :
                 false;
         } catch (\Exception $e) {
-            logError('搜索错误', [$e->getMessage()]);
+            logError('查询错误', [$e->getMessage()]);
+
             return false;
         }
     }
@@ -126,14 +165,37 @@ class User extends Model
                 ->update([
                     'user_sign' => $userSign
                 ]);
+          return $res ?
+                $res :
+                false;
+        } catch (\Exception $e) {
+          logError('搜索错误', [$e->getMessage()]);
+          return false;
+        }
+    }
+          
+
+     * 管理员操作用户账号的禁用状态
+     * @author zqz
+     * @param $user_id
+     * @param $user_state1
+     * @return false
+     */
+    public static function establishphoto4($user_id,$user_state1)
+    {
+        try {
+            $res=self::where('user_id',$user_id)->update(['user_state1'=>$user_state1]);
+
             return $res ?
                 $res :
                 false;
         } catch (\Exception $e) {
-            logError('搜索错误', [$e->getMessage()]);
+            logError('查询错误', [$e->getMessage()]);
+
             return false;
         }
     }
+
 
     /**
      * 更改用户信息
@@ -151,11 +213,53 @@ class User extends Model
                     'user_qq'       => $userQq
 
                 ]);
+           return $res ?
+                $res :
+                false;
+        } catch (\Exception $e) {
+           logError('搜索错误', [$e->getMessage()]);
+          return false;
+        }
+    }
+          
+
+
+    /**
+     * 管理员管理查看用户动态
+     * @author zqz
+     * @param $dlabel_id
+     * @param $user_nickname
+     * @return array|false
+     */
+    public static function establishphoto5($dlabel_id,$user_nickname)
+    {
+        try {
+            //如果标签与昵称都为空 则查询全部
+            if ($dlabel_id == null && $user_nickname == null){
+                //连接用户信息、图片与动态三张表
+                $res = Dynamics::with('user','url')->get();
+            } elseif ($dlabel_id != null && $user_nickname == null){
+                //连接用户信息、图片与动态三张表，根据符合动态标签查询动态
+                $res = Dynamics::with('user','url')->where('dlabel_id',$dlabel_id)->get();
+            }elseif ($dlabel_id == null && $user_nickname != null){
+                $a=self::where('user_nickname','like','%'.$user_nickname.'%')->pluck('user_id');
+                //连接用户信息、图片与动态三张表，根据符合用户昵称查询动态
+                $res = Dynamics::with('user','url')
+                    ->whereIn('user_id',$a)->get();
+            }elseif ($dlabel_id != null && $user_nickname != null){
+                $a=self::where('user_nickname','like','%'.$user_nickname.'%')->pluck('user_id');
+                //连接用户信息、图片与动态三张表，根据符合用户昵称和动态标签查询动态
+                $res = Dynamics::with('user','url')->where('dlabel_id',$dlabel_id)
+                    ->whereIn('user_id',$a)->get();
+            }
+
             return $res ?
                 $res :
                 false;
         } catch (\Exception $e) {
-            logError('搜索错误', [$e->getMessage()]);
+
+            logError('查询错误', [$e->getMessage()]);
+
             return false;
         }
     }
@@ -204,11 +308,75 @@ class User extends Model
                     'user_nickname',
                 ])
                 ->get();
+          return $res ?
+                $res :
+                false;
+        } catch (\Exception $e) {
+           logError('搜索错误', [$e->getMessage()]);
+                      return false;
+        }
+    }
+          
+
+     * 管理员删除动态
+     * @author zqz
+     * @param $id
+     * @return false
+     */
+    public static function establishphoto6($id)
+    {
+        try {
+            //删除动态中相关的图片与视频
+          $a=Dynamics::join('url','url.dynamics_id','=','dynamics.id')
+              ->where('url.dynamics_id',$id)->pluck('url.id');
+
+          if (count($a)>0){
+              foreach ($a as $value){
+                  Url::where('id',$value)->delete();
+              }
+          }
+          //删除动态中相关的点赞信息
+          $b=Dynamics::join('likes','likes.dynamics_id','=','dynamics.id')
+              ->where('likes.dynamics_id',$id)->pluck('likes.id');
+          if (count($b)>0){
+              foreach ($b as $value){
+                  Likes::where('id',$value)->delete();
+              }
+          }
+
+          //删除动态收藏
+          $c=Dynamics::join('collection','collection.dynamics_id','=','dynamics.id')
+              ->where('collection.dynamics_id',$id)->pluck('collection.id');
+          if (count($c)>0){
+              foreach ($c as $value){
+                  Collection::where('id',$value)->delete();
+              }
+          }
+
+          //删除动态下的相应评论
+          $d=Dynamics::join('comment','comment.dynamics_id','=','dynamics.id')
+              ->where('comment.dynamics_id',$id)->pluck('comment.id');
+          if (count($d)>0){
+              foreach ($d as $value){
+                  Comment::where('id',$value)->delete();
+              }
+          }
+
+          //删除动态的举报信息
+          $e=Dynamics::join('tip','tip.dynamics_id','=','dynamics.id')
+              ->where('tip.dynamics_id',$id)->pluck('tip.id');
+          if (count($e)>0){
+              foreach ($e as $value){
+                  Tip::where('id',$value)->delete();
+              }
+          }
+            //删除该动态
+            $res = Dynamics::where('id',$id)->delete();
             return $res ?
                 $res :
                 false;
         } catch (\Exception $e) {
-            logError('搜索错误', [$e->getMessage()]);
+            logError('查询错误', [$e->getMessage()]);
             return false;
         }
     }

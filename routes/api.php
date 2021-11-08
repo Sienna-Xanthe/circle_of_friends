@@ -87,3 +87,28 @@ Route::prefix('gxh')->group(function () {
 
 
 
+Route::prefix('dynamic')->group(function () {
+    Route::post('publish', 'Dynamic\DynamicController@publish');//将用户发表的动态信息储存在动态表中
+    Route::post('comment', 'Dynamic\DynamicController@comment');//将用户发表的评论信息储存在评论表中
+    Route::get('whole_type', 'Dynamic\DynamicController@wholeType');//用户主页展示全部的动态
+    Route::get('mine_type', 'Dynamic\DynamicController@mineType');//用户查看自己全部的动态
+    Route::post('report', 'Dynamic\DynamicController@report');//用户举报动态进行信息填写
+    Route::post('collection', 'Dynamic\DynamicController@collection');//收藏动态
+    Route::post('cancel_collection', 'Dynamic\DynamicController@cancelCollection');//取消收藏的动态
+    Route::post('delete', 'Dynamic\DynamicController@delete');//用户删除自己的动态
+    Route::get('mine_collection', 'Dynamic\DynamicController@mineCollection');//点击我的收藏，查看用户收藏的动态
+    Route::get('collection_details', 'Dynamic\DynamicController@collectionDetails');//查看用户收藏动态中的动态详情
+    Route::post('fabulous', 'Dynamic\DynamicController@fabulous');//对动态进行点赞或取消点赞
+    Route::post('delete_comment', 'Dynamic\DynamicController@deleteComment');//用户删除评论
+});//--zqz
+
+
+Route::prefix('admin')->group(function () {
+    Route::get('user_administration', 'Admin\AdminstrationController@userAdministration');//管理员管理用户
+    Route::post('disable', 'Admin\AdminstrationController@disable');//管理员操作用户账号的禁用状态
+    Route::get('dynamic_administration', 'Admin\AdminstrationController@dynamicAdministration');//管理员管理查看用户动态
+    Route::post('delete_dynamic', 'Admin\AdminstrationController@deleteDynamic');//管理员删除动态
+
+});//--zqz
+
+
