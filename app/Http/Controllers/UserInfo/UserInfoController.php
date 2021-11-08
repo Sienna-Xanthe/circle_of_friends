@@ -19,7 +19,6 @@ use App\Models\Blacklist;
 use App\Models\Comment;
 use App\Models\Personality;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class UserInfoController extends Controller
 {
@@ -172,8 +171,10 @@ class UserInfoController extends Controller
     {
 
         $userId = $request['userId'];
-//       $res=Comment::lyt_commentUserId($userId);
-        $res = Comment::lyt_commentUserId();
+
+        $res= Comment::lyt_commentUserId($userId);
+
+        Comment::lyt_information($userId);
         return $res ?
             json_success('操作成功!', $res, 200) :
             json_fail('操作失败!', null, 100);
