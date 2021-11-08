@@ -18,11 +18,16 @@ class Blacklist extends Model
 
 
     public static function test($userId){
-
-
-        $res = self::with('getuser')
-            ->where('user_id',$userId)
+        $blacklist = self::where('user_id',$userId)
+            ->pluck('blacklist_id');
+        $res = User::select('user_id','user_image','user_nickname')
+            ->whereIn('user_id',$blacklist)
             ->get();
+
+
+//        $res = self::with('getuser')
+//            ->where('user_id',$userId)
+//            ->get();
         return $res;
     }
 
