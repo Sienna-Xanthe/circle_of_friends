@@ -173,8 +173,8 @@ class User extends Model
           return false;
         }
     }
-          
 
+/**
      * 管理员操作用户账号的禁用状态
      * @author zqz
      * @param $user_id
@@ -221,7 +221,7 @@ class User extends Model
           return false;
         }
     }
-          
+
 
 
     /**
@@ -316,8 +316,8 @@ class User extends Model
                       return false;
         }
     }
-          
 
+/**
      * 管理员删除动态
      * @author zqz
      * @param $id
