@@ -38,7 +38,7 @@ class Login extends \Illuminate\Foundation\Auth\User implements JWTSubject,Authe
     public static function createUser($array = [])
     {
         try {
-            $login_id = self::create($array)->id;
+            $login_id = self::create($array)->username;
             return $login_id ?
                 $login_id :
                 false;

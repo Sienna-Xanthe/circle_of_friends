@@ -53,8 +53,9 @@ class AdminLoginController extends Controller
      */
     public function registered(AdminLoginRequest $registeredRequest)
     {
-        return Login::createUser(self::userHandle($registeredRequest)) ?
-            json_success('注册成功!',null,200  ) :
+        $res=Login::createUser(self::userHandle($registeredRequest));
+        return $res ?
+            json_success('注册成功!',$res,200  ) :
             json_success('注册失败!',null,100  ) ;
 
     }
