@@ -21,7 +21,8 @@
     "laravel/tinker": "^2.0",
     "monolog/monolog": "^1.25",
     "tymon/jwt-auth": "dev-develop",
-    "ext-exif": "*"
+    "ext-exif": "*",
+    "ext-http": "*"
   },
   "require-dev": {
     "facade/ignition": "^1.4",
