@@ -39,6 +39,7 @@ class UploadController extends Controller
         //获取上传图片的Url链接
         $Url = OSS::getPublicObjectURL('pengxingyi', $pathName);
         // 返回状态给前端，Laravel框架会将数组转成JSON格式
-        return ['code' => 0, 'msg' => '上传成功', 'data' => ['src' => $Url]];
+//        return ['code' => 0, 'msg' => '上传成功', 'data' => ['src' => $Url]];
+        return json_success('上传成功',$Url,200);
     }
 }

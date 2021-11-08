@@ -11,9 +11,14 @@ class Url extends Model
     protected $primaryKey = "id";
     protected $guarded = [];
 
+
+    public function dynamics1(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Dynamics::class,'id');
+    }
+
     public function dynamics(){
         return $this->belongsTo(Dynamics::class,'dynamics_id');
     }
-
 
 }
