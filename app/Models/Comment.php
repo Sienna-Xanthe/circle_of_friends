@@ -10,4 +10,87 @@ class Comment extends Model
     public $timestamps = true;
     protected $primaryKey = "id";
     protected $guarded = [];
+
+    public function getuser(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(User::class, 'user_id', 'user_id');
+    }
+
+    public function getdynamics(){
+        return $this->hasOne(Dynamics::class, 'id', 'dynamics_id')->with('getpublisher','getUrl');
+    }
+
+    public static function lyt_commentUserId()
+    {
+        $res = self::with('getuser','getdynamics')
+
+        ->get();
+        return $res;
+    }
+
+
+
+
+//    /**
+//     * 消息的展示
+//     * @return false|mixed
+//     */
+//    public static function lyt_information($userId)
+//    {
+//        try {
+//            $res=self::join('dynamics','dynamics.id','dynamics_id')
+//                ->join('user','user.user_id','comment.user_id')
+//                ->where('dynamics.user_id','=',$userId)
+//                ->select([
+//
+//                    'user.user_nickname',
+//                    'dynamics.dynamics_content'
+//                ]);
+//            return $res ?
+//                $res :
+//                false;
+//        } catch (\Exception $e) {
+//            logError('搜索错误', [$e->getMessage()]);
+//            return false;
+//        }
+//    }
+
+//    /**
+//     * 通过传上去的评论者的userId在进行查询
+//     * @return false|mixed
+//     */
+//    public static function lyt_commentUserId($userId)
+//    {
+//
+//        try {
+//            $res = self::join('user', 'user.user_id', 'comment.user_id')
+//                ->join('dynamics', 'dynamics.id', 'dynamics_id')
+//                ->where('dynamics.user_id', '=', $userId)
+//                ->select([
+//                    'user.user_id as cid',
+//                    'user.user_image as cheader',
+//                    'user.user_nickname as cnickname',
+//                    'user.user_sign as csign',
+//                    'comment.comment_content as ccomment',
+//                    'comment.created_at as ctime',
+//                    'dynamics.dynamics_content as dcomment',
+//                    'dynamics.user_id as duid',
+//
+//
+//                ])
+//                ->get();
+////            foreach ($res as $cc) {
+////                $cs                = $cc->comment()->value('user_id ');
+////                $cc->user_id = $cs;
+////            }
+//
+//            return $res ?
+//                $res :
+//                false;
+//        } catch (\Exception $e) {
+//            logError('搜索错误', [$e->getMessage()]);
+//            return false;
+//        }
+//    }
+
 }
