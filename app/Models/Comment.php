@@ -24,12 +24,13 @@ class Comment extends Model
     public static function lyt_commentUserId($userId)
     {
         $pd = Dynamics::where('dynamics.user_id', '=', $userId)
-            ->value('user_id');
+            ->pluck('id');
 
-        if ($pd == $userId) {
+//        if ($pd == $userId) {
             $res = self::with('getuser','getdynamics')
+                ->whereIn('dynamics_id',$pd)
                 ->get();
-        }
+//        }
             return $res;
 
     }
@@ -63,7 +64,7 @@ class Comment extends Model
             $res = self::join('dynamics', 'dynamics.id', 'dynamics_id')
                 ->where('dynamics.user_id', '=', $userId)
                 ->update([
-                    'comment_state' => 1
+                    'comment_state' => 0
                 ]);
             return $res ?
                 $res :

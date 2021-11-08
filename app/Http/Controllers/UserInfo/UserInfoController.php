@@ -147,13 +147,16 @@ class UserInfoController extends Controller
      */
     public function insertBackground(insertBackgroundRequest $request)
     {
-        $userId     = $request['userId'];
-        $background = $request['background'];
-        $flower     = $request['flower'];
+        $userId            = $request['userId'];
+        $background        = $request['background'];
+        $flower            = $request['flower'];
+        $personalityImage = $request['personalityImage'];
         if ($background != null) {
             $res = Personality::lyt_insertBackground($userId, $background);
         } elseif ($flower != null) {
             $res = Personality::lyt_insertFlower($userId, $flower);
+        }elseif ($personalityImage!=null){
+            $res=Personality::lyt_insertZdyBackground($userId,$personalityImage);
         }
 
         return $res ?
@@ -172,7 +175,7 @@ class UserInfoController extends Controller
 
         $userId = $request['userId'];
 
-        $res= Comment::lyt_commentUserId($userId);
+        $res = Comment::lyt_commentUserId($userId);
 
         Comment::lyt_information($userId);
         return $res ?
