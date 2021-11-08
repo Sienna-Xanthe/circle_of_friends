@@ -327,8 +327,8 @@ class Dynamics extends Model
     public static function establishphoto6($id)
     {
         try {
-            //删除该动态
-            $res = Dynamics::where('id',$id)->delete();
+//            //删除该动态
+//            $res = Dynamics::where('id',$id)->delete();
             //删除动态中相关的图片与视频
             $a=Dynamics::join('url','url.dynamics_id','=','dynamics.id')
                 ->where('url.dynamics_id',$id)->pluck('url.id');
@@ -373,6 +373,8 @@ class Dynamics extends Model
                     Tip::where('id',$value)->delete();
                 }
             }
+            //删除该动态
+            $res = Dynamics::where('id',$id)->delete();
 
             return $res ?
                 $res :

@@ -55,6 +55,7 @@ class User extends Model
      * 查询账户是否禁用
      * @param $unionid
      * @return false
+     * pxy
      */
     public static function is_disable($unionid)
     {
@@ -72,6 +73,7 @@ class User extends Model
     /**
      * 第一次登录填写个人资料
      * @param $request
+     * pxy
      */
     public static function informationforfirst($request)
     {
@@ -380,5 +382,39 @@ class User extends Model
             return false;
         }
     }
+
+    /**
+     * 登录时获取基本信息和评论的新消息数
+     * @param $user_id
+     * @return array|false
+     */
+    public static function getinfo($user_id){
+        try {
+            $res['user_nickname'] = self::where('user_id',$user_id)
+                ->select([
+                    'user_nickname'
+                ])
+                ->value('user_nickname');
+            $res['user_sign'] = self::where('user_id',$user_id)
+                ->select([
+                    'user_sign'
+                ])
+                ->value('user_sign');
+            $dy_list = Dynamics::where('user_id',$user_id)->pluck('id');
+
+            $res['news'] = Comment::select('*')
+            ->where('comment_state',1)
+                ->whereIn('dynamics_id',$dy_list)
+                ->count();
+            ;
+            return $res ?
+                $res :
+                false;
+        } catch (\Exception $e) {
+            logError('查询', [$e->getMessage()]);
+            return false;
+        }
+    }
+
 
 }
