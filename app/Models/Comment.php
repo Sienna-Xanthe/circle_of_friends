@@ -16,35 +16,32 @@ class Comment extends Model
         return $this->hasOne(User::class, 'user_id', 'user_id');
     }
 
-    public function getdynamics(){
-        return $this->hasOne(Dynamics::class, 'id', 'dynamics_id')->with('getpublisher','getUrl');
-    }
-
-    public static function lyt_commentUserId()
+    public function getdynamics()
     {
-        $res = self::with('getuser','getdynamics')
-
-        ->get();
-        return $res;
+        return $this->hasOne(Dynamics::class, 'id', 'dynamics_id')->with('getpublisher', 'getUrl');
     }
 
+    public static function lyt_commentUserId($userId)
+    {
+        $pd = Dynamics::where('dynamics.user_id', '=', $userId)
+            ->value('user_id');
 
+        if ($pd == $userId) {
+            $res = self::with('getuser','getdynamics')
+                ->get();
+        }
+            return $res;
 
+    }
 
-//    /**
-//     * 消息的展示
-//     * @return false|mixed
-//     */
-//    public static function lyt_information($userId)
+//    public function lyt_changeCommentState($userId)
 //    {
 //        try {
-//            $res=self::join('dynamics','dynamics.id','dynamics_id')
-//                ->join('user','user.user_id','comment.user_id')
-//                ->where('dynamics.user_id','=',$userId)
-//                ->select([
 //
-//                    'user.user_nickname',
-//                    'dynamics.dynamics_content'
+//            $res = self::join('dynamics', 'dynamics.id', 'dynamics_id')
+//                ->where('dynamics.user_id', '=', $userId)
+//                ->update([
+//                    'comment_state' => 1
 //                ]);
 //            return $res ?
 //                $res :
@@ -54,6 +51,28 @@ class Comment extends Model
 //            return false;
 //        }
 //    }
+
+
+    /**
+     * 消息的展示
+     * @return false|mixed
+     */
+    public static function lyt_information($userId)
+    {
+        try {
+            $res = self::join('dynamics', 'dynamics.id', 'dynamics_id')
+                ->where('dynamics.user_id', '=', $userId)
+                ->update([
+                    'comment_state' => 1
+                ]);
+            return $res ?
+                $res :
+                false;
+        } catch (\Exception $e) {
+            logError('搜索错误', [$e->getMessage()]);
+            return false;
+        }
+    }
 
 //    /**
 //     * 通过传上去的评论者的userId在进行查询

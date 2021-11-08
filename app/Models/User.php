@@ -191,12 +191,12 @@ class User extends Model
     public static function lyt_selectWhiteUserByNickName($userId, $nickName)
     {
         try {
-//            $a=Blacklist::where('user_id',$userId)->pluck('blacklist_id');
+            $a=Blacklist::where('user_id',$userId)->pluck('blacklist_id');
 
             $res = self::where('user.user_id', '<>', $userId)
-//                ->whereNOtIn('user.user_id',$a)
-                ->where('user_nickname', '=', '$nickName')
-                ->orWhere('user_nickname', 'like', '%'.$nickName.'%')
+                ->whereNOtIn('user.user_id',$a)
+//                ->where('user_nickname', '=', '$nickName')
+                ->Where('user_nickname', 'like', '%'.$nickName.'%')
                 ->
                 select([
                     'user_id',
