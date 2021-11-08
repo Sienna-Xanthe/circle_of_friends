@@ -10,4 +10,10 @@ class Url extends Model
     public $timestamps = true;
     protected $primaryKey = "id";
     protected $guarded = [];
+
+    public function dynamics(){
+        return $this->belongsTo(Dynamics::class,'dynamics_id');
+    }
+
+
 }
