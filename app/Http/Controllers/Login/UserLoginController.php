@@ -11,7 +11,7 @@ class UserLoginController extends Controller
 {
     private $accessKey = 'dingyeg1sljjmk0vppsl';
     private $appsecret = 'F2LPWO1jZHCJBSZY8M8RwjbYERjkV7EBh8-NzlC_nhZcFtvxcv7dmHn3PXTZLjRm';
-    private $access_token = '0a4edad4167b3b3c9ac9f10a3918ebef';
+    private $access_token = '9efd7396409e35d3bb5775ed47fe578e';
 
     /**
      * 登录
@@ -21,21 +21,21 @@ class UserLoginController extends Controller
     public function userlogin(Request $request){
         $code = $request['code'];
         $state = $request['state'];
-        //echo "code: " . $code . "\n" . $state;
+//        echo "code: " . $code . "\n" ."state:". $state."\n";
         $this->gettoken();
         $unionid = $this->back($code,$state);//unionid
-        echo "unionid: ".$unionid."\n";
+//        echo "unionid: ".$unionid."\n";
         $userid = $this->getbyunionid($unionid);
         if($userid === false){
             return
-                json_fail('请先加入组织!登录失败!!', null, 100);
+                json_fail('请先加入组织!登录失败!!!', null, 100);
         }
 //        echo "userid: ".$userid."\n";
         $detail = $this->getall($userid);
         $avatar = $detail['result']['avatar'];//avatar
         $name = $detail['result']['name'];//name
-        echo "avatar: ".$avatar."\n";
-        echo "name: ".$name."\n";
+//        echo "avatar: ".$avatar."\n";
+//        echo "name: ".$name."\n";
         $userinfo['user_id'] = $unionid;//
         $userinfo['user_image'] = $avatar;
         $userinfo['user_name'] = $name;
@@ -50,6 +50,12 @@ class UserLoginController extends Controller
             $is_disable = User::is_disable($unionid);
             if($is_disable == 1)
             {
+                $userinfo = User::getinfo($unionid);
+                $userinfo['user_id'] = $unionid;//
+                $userinfo['user_image'] = $avatar;
+                $userinfo['user_name'] = $name;
+                $userinfo['isfirst'] = 0;
+
                 return json_success('登录成功!', $userinfo, 200);
             }
             else if($is_disable == 0)
@@ -77,7 +83,7 @@ class UserLoginController extends Controller
     public function scancode()
     {
         //echo "test";
-        return redirect('https://oapi.dingtalk.com/connect/qrconnect?appid=dingyeg1sljjmk0vppsl&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=http://127.0.0.1:8000/api/user/login');
+        return redirect('https://oapi.dingtalk.com/connect/qrconnect?appid=dingyeg1sljjmk0vppsl&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=http://friend.pxy.fit/api/user/login');
     }
     /**
      * 获取access_token

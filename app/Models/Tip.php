@@ -11,6 +11,7 @@ class Tip extends Model
     protected $primaryKey = "id";
     protected $guarded = [];
 
+
     public function getDynamics(){
         return $this->hasOne(Dynamics::class, 'id', 'dynamics_id')
             ->with('getpublisher','getUrl');
@@ -371,12 +372,47 @@ class Tip extends Model
 
             $res[5] = Tip::where('tip.id', '=', $tid)
                 ->delete();
+           return $res ?
+                $res :
+                false;
+        } catch (\Exception $e) {
+          logError('搜索错误', [$e->getMessage()]);
+            return false;
+        }
+    }
+
+
+    /**
+     * 用户举报动态进行信息填写
+     * @author zqz
+     * @param $user_id
+     * @param $tlabel_id
+     * @param $id
+     * @param $tip_reason
+     * @return false
+     */
+    public static function establishphoto3($user_id,$tlabel_id,$id,$tip_reason,$informant_name)
+    {
+//        将获取举报人id  该动态id 举报类型 举报理由存入举报表中(tip)
+        try {
+
+                $res=Tip::create([
+                    'user_id'           => $user_id,
+                    'tlabel_id'         => $tlabel_id,
+                    'dynamics_id'       => $id,
+                    'tip_reason'        => $tip_reason,
+                    'informant_name'        => $informant_name,
+                ]);
+
+
 
             return $res ?
                 $res :
                 false;
         } catch (\Exception $e) {
-            logError('搜索错误', [$e->getMessage()]);
+
+
+            logError('查询错误', [$e->getMessage()]);
             return false;
         }
     }
