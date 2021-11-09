@@ -24,7 +24,7 @@ class UserLoginController extends Controller
 //        echo "code: " . $code . "\n" ."state:". $state."\n";
         $this->gettoken();
         $unionid = $this->back($code,$state);//unionid
-        echo "unionid: ".$unionid."\n";
+//        echo "unionid: ".$unionid."\n";
         $userid = $this->getbyunionid($unionid);
         if($userid === false){
             return
@@ -34,8 +34,8 @@ class UserLoginController extends Controller
         $detail = $this->getall($userid);
         $avatar = $detail['result']['avatar'];//avatar
         $name = $detail['result']['name'];//name
-        echo "avatar: ".$avatar."\n";
-        echo "name: ".$name."\n";
+//        echo "avatar: ".$avatar."\n";
+//        echo "name: ".$name."\n";
         $userinfo['user_id'] = $unionid;//
         $userinfo['user_image'] = $avatar;
         $userinfo['user_name'] = $name;
@@ -95,9 +95,9 @@ class UserLoginController extends Controller
         ];
         $token = $this->curl_json($url,$data);
         $res       = json_decode($token, true);
-//        $this->access_token = $res['accessToken'];
+        $this->access_token = $res['accessToken'];
 //        echo "------------------access_token: \n";
-        echo $this->access_token;
+//        echo $this->access_token;
     }
 
     /**
