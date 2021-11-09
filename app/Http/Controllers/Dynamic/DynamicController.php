@@ -97,7 +97,8 @@ class DynamicController extends Controller
         $tlabel_id=$request['tlabel_id'];
         $id=$request['id'];
         $tip_reason=$request['tip_reason'];
-        $res=Tip::establishphoto3($user_id,$tlabel_id,$id,$tip_reason);
+        $informant_name=$request['informant_name'];
+        $res=Tip::establishphoto3($user_id,$tlabel_id,$id,$tip_reason,$informant_name);
         return $res ?
             json_success('举报成功!', null, 200) :
             json_fail('举报失败!', null, 100);
