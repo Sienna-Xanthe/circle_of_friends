@@ -90,6 +90,8 @@ class TipController extends Controller
             $res = Tip::lyt_selectTipByNoState($time, $tLabel);
         }elseif ($tLabel != 0 && $time != null && $state != 0){
            $res=Tip::lyt_selectTipByAll1($time,$tLabel,$state);
+        }elseif ($tLabel == null && $time == null && $state == null){
+            $res = Tip::lyt_selectTipByAll();
         }
 
         return $res ?
