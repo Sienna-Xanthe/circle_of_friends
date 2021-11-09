@@ -20,14 +20,14 @@ class AdminLoginController extends Controller
         try {
             $credentials = self::credentials($loginRequest);
             if (!$token = auth('api')->attempt($credentials)) {
-                return json_fail(100, '账号或者密码错误!', null);
+                return json_fail('账号或者密码错误!', null, 100);
             }
 
             return self::respondWithToken($token, '登录成功!');
         } catch (\Exception $e) {
 
             echo $e->getMessage();
-            return json_fail(500, '登录失败!', null, 500);
+            return json_fail( '登录失败!', null, 100);
         }
     }
     /**
@@ -55,7 +55,7 @@ class AdminLoginController extends Controller
     {
         $res=Login::createUser(self::userHandle($registeredRequest));
         return $res ?
-            json_success('注册成功!',$res,200  ) :
+            json_success('注册成功!', $res,200  ) :
             json_success('注册失败!',null,100  ) ;
 
     }
