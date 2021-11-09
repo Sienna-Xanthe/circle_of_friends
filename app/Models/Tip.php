@@ -11,10 +11,10 @@ class Tip extends Model
     protected $primaryKey = "id";
     protected $guarded = [];
 
-
-    public function getDynamics(){
+    public function getDynamics()
+    {
         return $this->hasOne(Dynamics::class, 'id', 'dynamics_id')
-            ->with('getpublisher','getUrl');
+            ->with('getpublisher', 'getUrl');
     }
 
     /**
@@ -22,11 +22,12 @@ class Tip extends Model
      * @param $tLabel
      * @return false
      */
-    public static function lyt_selectTipDetails()
+    public static function lyt_selectTipDetails($tid)
     {
         try {
-            $res = self::with('getDynamics')->get();
-
+            $res = self::with('getDynamics')
+                ->where('tip.id','=',$tid)
+                ->get();
             return $res ?
                 $res :
                 false;
@@ -35,10 +36,6 @@ class Tip extends Model
             return false;
         }
     }
-
-
-
-
 
 
     /**
@@ -52,14 +49,18 @@ class Tip extends Model
             $res = self::join('tlabel', 'tlabel.id', 'tip.tlabel_id')
                 ->join('dynamics', 'dynamics.id', 'tip.dynamics_id')
                 ->join('user', 'user.user_id', 'tip.user_id')
+                ->with('getDynamics')
                 ->select([
                     'tip.id as tid',
-                    'tip.user_id as jb',
-                    'dynamics.user_id as bjb',
+//                    'tip.user_id as jb',
+                    'tip.informant_name as bjb',
+                    'user.user_name as jb',
+//                    'dynamics.user_id as bjb',
                     'tlabel.tlabel_name',
                     'tip.created_at',
                     'tip_state'
-                ])->paginate(5);
+                ])
+                ->paginate(5);
             return $res ?
                 $res :
                 false;
@@ -84,8 +85,8 @@ class Tip extends Model
                 ->where('tip_state', '=', $state)
                 ->select([
                     'tip.id as tid',
-                    'tip.user_id as jb',
-                    'dynamics.user_id as bjb',
+                    'user.user_name as jb',
+                    'tip.informant_name as bjb',
                     'tlabel.tlabel_name',
                     'tip.created_at',
                     'tip_state'
@@ -114,8 +115,8 @@ class Tip extends Model
                 ->where('tip_state', '=', $state)
                 ->select([
                     'tip.id as tid',
-                    'tip.user_id as jb',
-                    'dynamics.user_id as bjb',
+                    'user.user_name as jb',
+                    'tip.informant_name as bjb',
                     'tlabel.tlabel_name',
                     'tip.created_at',
                     'tip_state'
@@ -144,8 +145,8 @@ class Tip extends Model
                 ->whereDate('tip.created_at', '=', $time)
                 ->select([
                     'tip.id as tid',
-                    'tip.user_id as jb',
-                    'dynamics.user_id as bjb',
+                    'user.user_name as jb',
+                    'tip.informant_name as bjb',
                     'tlabel.tlabel_name',
                     'tip.created_at',
                     'tip_state'
@@ -165,7 +166,7 @@ class Tip extends Model
      * @param $tLabel
      * @return false
      */
-    public static function lyt_selectTipByAll1($time,$tLabel,$state)
+    public static function lyt_selectTipByAll1($time, $tLabel, $state)
     {
         try {
             $res = self::join('tlabel', 'tlabel.id', 'tip.tlabel_id')
@@ -176,8 +177,8 @@ class Tip extends Model
                 ->where('tip_state', '=', $state)
                 ->select([
                     'tip.id as tid',
-                    'tip.user_id as jb',
-                    'dynamics.user_id as bjb',
+                    'user.user_name as jb',
+                    'tip.informant_name as bjb',
                     'tlabel.tlabel_name',
                     'tip.created_at',
                     'tip_state'
@@ -206,8 +207,8 @@ class Tip extends Model
                 ->where('tlabel.id', '=', $tLabel)
                 ->select([
                     'tip.id as tid',
-                    'tip.user_id as jb',
-                    'dynamics.user_id as bjb',
+                    'user.user_name as jb',
+                    'tip.informant_name as bjb',
                     'tlabel.tlabel_name',
                     'tip.created_at',
                     'tip_state'
@@ -235,8 +236,8 @@ class Tip extends Model
                 ->whereDate('tip.created_at', '=', $time)
                 ->select([
                     'tip.id as tid',
-                    'tip.user_id as jb',
-                    'dynamics.user_id as bjb',
+                    'user.user_name as jb',
+                    'tip.informant_name as bjb',
                     'tlabel.tlabel_name',
                     'tip.created_at',
                     'tip_state'
@@ -264,8 +265,8 @@ class Tip extends Model
                 ->where('tip_state', '=', $state)
                 ->select([
                     'tip.id as tid',
-                    'tip.user_id as jb',
-                    'dynamics.user_id as bjb',
+                    'user.user_name as jb',
+                    'tip.informant_name as bjb',
                     'tlabel.tlabel_name',
                     'tip.created_at',
                     'tip_state'
@@ -347,7 +348,7 @@ class Tip extends Model
     public static function lyt_successTipByOther($tid)
     {
         try {
-            $did    = self::join('dynamics', 'dynamics.id', 'dynamics_id')
+            $did = self::join('dynamics', 'dynamics.id', 'dynamics_id')
                 ->where('tip.id', '=', $tid)
                 ->value('dynamics.id');
 
@@ -372,49 +373,16 @@ class Tip extends Model
 
             $res[5] = Tip::where('tip.id', '=', $tid)
                 ->delete();
-           return $res ?
-                $res :
-                false;
-        } catch (\Exception $e) {
-          logError('搜索错误', [$e->getMessage()]);
-            return false;
-        }
-    }
-
-
-    /**
-     * 用户举报动态进行信息填写
-     * @author zqz
-     * @param $user_id
-     * @param $tlabel_id
-     * @param $id
-     * @param $tip_reason
-     * @return false
-     */
-    public static function establishphoto3($user_id,$tlabel_id,$id,$tip_reason,$informant_name)
-    {
-//        将获取举报人id  该动态id 举报类型 举报理由存入举报表中(tip)
-        try {
-
-                $res=Tip::create([
-                    'user_id'           => $user_id,
-                    'tlabel_id'         => $tlabel_id,
-                    'dynamics_id'       => $id,
-                    'tip_reason'        => $tip_reason,
-                    'informant_name'        => $informant_name,
-                ]);
-
-
 
             return $res ?
                 $res :
                 false;
         } catch (\Exception $e) {
-
-
-            logError('查询错误', [$e->getMessage()]);
+            logError('搜索错误', [$e->getMessage()]);
             return false;
         }
     }
+
+
 
 }

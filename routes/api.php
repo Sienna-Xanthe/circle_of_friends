@@ -75,6 +75,7 @@ Route::prefix('tip')->group(function () {
     Route::post('showTipInformationByMany', 'Admin\TipController@showTipInformationByMany'); //举报信息
     Route::post('updatefailedTip', 'Admin\TipController@updatefailedTip'); //更新
     Route::post('deleteSuccessTip', 'Admin\TipController@deleteSuccessTip'); //删除
+    Route::get('xlkTipLabel', 'Admin\TipController@xlkTipLabel'); //从下拉框中获取标签
 });//--lyt
 
 
