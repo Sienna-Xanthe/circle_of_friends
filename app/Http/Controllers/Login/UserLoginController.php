@@ -83,7 +83,7 @@ class UserLoginController extends Controller
     public function scancode()
     {
         //echo "test";
-        return redirect('https://oapi.dingtalk.com/connect/qrconnect?appid=dingyeg1sljjmk0vppsl&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=http://127.0.0.1:8000/api/user/login');
+        return redirect('https://oapi.dingtalk.com/connect/qrconnect?appid=dingyeg1sljjmk0vppsl&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=http://friend.pxy.fit/api/user/login');
     }
     /**
      * 获取access_token
