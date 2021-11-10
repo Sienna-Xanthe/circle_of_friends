@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Upload;
 use App\Http\Controllers\Controller;
 use JetBrains\PhpStorm\Deprecated;
-use App\Services\OSS;
+use App\services\OSS;
 use Illuminate\Http\Request;
 
 class UploadController extends Controller

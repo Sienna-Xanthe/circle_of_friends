@@ -10,6 +10,7 @@ use App\Http\Requests\Admin\showTipInformationByDetailRequest;
 use App\Http\Requests\Admin\showTipInformationByManyRequest;
 use App\Http\Requests\Admin\updatefailedTipRequest;
 use App\Models\Tip;
+use App\Models\Tlabel;
 use Illuminate\Http\Request;
 
 class TipController extends Controller
@@ -22,7 +23,7 @@ class TipController extends Controller
     public function showTipInformationByDetail(showTipInformationByDetailRequest $request)
     {
         $tid = $request['tid'];
-        $res = Tip::lyt_selectTipDetails();
+        $res = Tip::lyt_selectTipDetails($tid);
         return $res ?
 
             json_success('操作成功!', $res, 200) :
@@ -89,11 +90,29 @@ class TipController extends Controller
             $res = Tip::lyt_selectTipByNoState($time, $tLabel);
         }elseif ($tLabel != 0 && $time != null && $state != 0){
            $res=Tip::lyt_selectTipByAll1($time,$tLabel,$state);
+        }elseif ($tLabel == null && $time == null && $state == null){
+            $res = Tip::lyt_selectTipByAll();
         }
 
         return $res ?
 
             json_success('操作成功!', $res, 200) :
             json_fail('操作失败!', null, 100);
+    }
+
+    /**
+     * 下拉框中举报标签
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function xlkTipLabel(Request $request)
+    {
+
+        $res = Tlabel::getXlkTipLabel();
+
+        return $res ?
+
+            json_success('显示成功!', $res, 200) :
+            json_fail('显示=失败!', null, 100);
     }
 }
