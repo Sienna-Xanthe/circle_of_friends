@@ -108,12 +108,12 @@ class UserLoginController extends Controller
      */
     public function back($code,$state)
     {
-        if(!$code or !$state) {
-            $this->error('参数缺失');
-        }
-        if($state > time()) {
-            $this->error('参数异常');
-        }
+//        if(!$code or !$state) {
+//            $this->error('参数缺失');
+//        }
+//        if($state > time()) {
+//            $this->error('参数异常');
+//        }
         //$accessKey = 'dingyeg1sljjmk0vppsl';
         $timestamp = $this->mTime();
         $signature = $this->signature($timestamp);
