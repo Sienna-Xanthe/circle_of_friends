@@ -48,7 +48,7 @@
     "classmap": [
       "database/seeds",
       "database/factories",
-        "app/services/OSS.php"
+        "app/services"
     ],
     "files": [
       "app/Helpers/functions.php"
