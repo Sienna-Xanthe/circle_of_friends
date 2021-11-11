@@ -36,6 +36,9 @@ class UserLoginController extends Controller
         $name = $detail['result']['name'];//name
 //        echo "avatar: ".$avatar."\n";
 //        echo "name: ".$name."\n";
+        if($avatar == null){
+            $avatar = "http://pengxingyi.oss-cn-beijing.aliyuncs.com/2021-11/11/8090phpAtvyAf1636638460211111.png";
+        }
         $userinfo['user_id'] = $unionid;//
         $userinfo['user_image'] = $avatar;
         $userinfo['user_name'] = $name;
@@ -50,7 +53,7 @@ class UserLoginController extends Controller
             $is_disable = User::is_disable($unionid);
             if($is_disable == 1)
             {
-                $userinfo = User::getinfo($unionid);
+                $userinfo = User::getinfo($unionid,$avatar);
                 $userinfo['user_id'] = $unionid;//
                 $userinfo['user_image'] = $avatar;
                 $userinfo['user_name'] = $name;

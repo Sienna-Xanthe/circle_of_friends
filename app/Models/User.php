@@ -395,8 +395,14 @@ class User extends Model
      * @param $user_id
      * @return array|false
      */
-    public static function getinfo($user_id){
+    public static function getinfo($user_id,$avatar){
         try {
+
+            $updateimage = self::where('user_id',$user_id)
+                ->update([
+                    'user_image' => $avatar
+                ]);
+
             $res['user_nickname'] = self::where('user_id',$user_id)
                 ->select([
                     'user_nickname'
