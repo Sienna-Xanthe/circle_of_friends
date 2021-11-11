@@ -73,9 +73,20 @@ class UserLoginController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function registered(UserRegisteredRequest $request){
-        return User::informationforfirst($request) ?
-            json_success('存储成功!', null, 200) :
+        $res['user_id'] = $request['user_id'];
+        $res['user_image'] = $request['user_image'];
+        $res['user_name'] = $request['user_name'];
+        $res['user_sex'] = $request['user_sex'];
+        $res['user_birthday'] = $request['user_birthday'];
+        $res['user_phone'] = $request['user_phone'];
+        $res['user_qq'] = $request['user_qq'];
+        if(User::informationforfirst($request))
+        {
+            return  $res ?
+            json_success('存储成功!', $res, 200) :
             json_success('存储失败!', null, 100);
+        }
+
     }
 
 
