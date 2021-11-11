@@ -80,6 +80,8 @@ class UserLoginController extends Controller
         $res['user_birthday'] = $request['user_birthday'];
         $res['user_phone'] = $request['user_phone'];
         $res['user_qq'] = $request['user_qq'];
+        $res['background_id'] = 4;
+        $res['flower_id'] = 2;
         if(User::informationforfirst($request))
         {
             return json_success('存储成功!', $res, 200) ;
