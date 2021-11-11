@@ -82,10 +82,11 @@ class UserLoginController extends Controller
         $res['user_qq'] = $request['user_qq'];
         if(User::informationforfirst($request))
         {
-            return  $res ?
-            json_success('存储成功!', $res, 200) :
-            json_success('存储失败!', null, 100);
+            return json_success('存储成功!', $res, 200) ;
+
         }
+        return
+            json_success('存储失败!', null, 100);
 
     }
 
