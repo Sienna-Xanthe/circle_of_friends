@@ -84,6 +84,7 @@ Route::prefix('tip')->group(function () {
  */
 Route::prefix('gxh')->group(function () {
     Route::post('insertBackground', 'UserInfo\UserInfoController@insertBackground'); //添加背景
+    Route::post('showGxh', 'UserInfo\UserInfoController@showGxh'); //添加背景
 });//--lyt
 
 

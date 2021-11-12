@@ -19,6 +19,8 @@ use App\Models\Blacklist;
 use App\Models\Comment;
 use App\Models\Personality;
 use App\Models\User;
+use Illuminate\Http\Request;
+
 
 class UserInfoController extends Controller
 {
@@ -147,16 +149,16 @@ class UserInfoController extends Controller
      */
     public function insertBackground(insertBackgroundRequest $request)
     {
-        $userId            = $request['userId'];
-        $background        = $request['background'];
-        $flower            = $request['flower'];
+        $userId           = $request['userId'];
+        $background       = $request['background'];
+        $flower           = $request['flower'];
         $personalityImage = $request['personalityImage'];
         if ($background != null) {
             $res = Personality::lyt_insertBackground($userId, $background);
         } elseif ($flower != null) {
             $res = Personality::lyt_insertFlower($userId, $flower);
-        }elseif ($personalityImage!=null){
-            $res=Personality::lyt_insertZdyBackground($userId,$personalityImage);
+        } elseif ($personalityImage != null) {
+            $res = Personality::lyt_insertZdyBackground($userId, $personalityImage);
         }
 
         return $res ?
@@ -184,21 +186,19 @@ class UserInfoController extends Controller
     }
 
 
-//    /**
-//     * 显示所有白名单用户
-//     * @param  showAllWUserRequest  $request
-//     * @return \Illuminate\Http\JsonResponse
-//     */
-//    public function showAllWUser(showAllWUserRequest $request)
-//    {
-//        $userId = $request['userId'];
-//        echo $userId;
-////        $res    = Blacklist::lyt_selectAllWUser($userId);
-//
-//
-//        return $res ?
-//            json_success('查找成功!', $res, 200) :
-//            json_fail('查找失败!', null, 100);
-//    }
+    /**
+     * 显示个性化设置
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showGxh(Request $request)
+    {
+        $userId = $request['userId'];
+        $res    = Personality::lyt_showGxh($userId);
+
+        return $res ?
+            json_success('查找成功!', $res, 200) :
+            json_fail('查找失败!', null, 100);
+    }
 
 }

@@ -32,6 +32,11 @@ class User extends Model
         return $this->belongsTo(Comment::class,'user_id');
 
     }
+    public function personality(){
+        return $this->belongsTo(Personality::class,'user_id');
+
+    }
+
 
     /**
      * 查询是否为第一次登录
@@ -123,7 +128,8 @@ class User extends Model
                     'user_phone',
                     'user_sex',
                     'user_birthday',
-                    'user_qq'
+                    'user_qq',
+                    'user_sign'
                 ])
                 ->get();
            return $res ?
