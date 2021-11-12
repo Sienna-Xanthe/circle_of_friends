@@ -153,11 +153,11 @@ class User extends Model
         try {
             //如果不传姓名，查询全部的用户
             if ($user_name==null){
-                $res=self::select('user_id','user_name','user_nickname','user_phone','user_state1')->paginate(5);
+                $res=self::select('user_id','user_name','user_nickname','user_phone','user_state1')->get();
             }else{
                 //姓名进行选择查询
                 $res=self::select('user_id','user_name','user_nickname','user_phone','user_state1')
-                    ->where('user_name','like','%'.$user_name.'%')->paginate(5);
+                    ->where('user_name','like','%'.$user_name.'%')->get();
             }
 
             return $res ?
