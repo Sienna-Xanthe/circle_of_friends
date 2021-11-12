@@ -32,6 +32,11 @@ class User extends Model
         return $this->belongsTo(Comment::class,'user_id');
 
     }
+    public function personality(){
+        return $this->belongsTo(Personality::class,'user_id');
+
+    }
+
 
     /**
      * 查询是否为第一次登录
@@ -78,7 +83,7 @@ class User extends Model
     public static function informationforfirst($request)
     {
         try {
-            $res = User::create(
+            $res1 = User::create(
                 [
                     'user_id'       => $request['user_id'],
                     'user_image'    => $request['user_image'],
@@ -91,8 +96,15 @@ class User extends Model
                     'user_state1'   => 1
                 ]
             );
-            return $res ?
-                $res :
+            $res2 = Personality::create(
+                [
+                    'user_id'       => $request['user_id'],
+                    'background_id'       => 4,
+                    'flower_id'       => 2,
+                ]
+            );
+            return $res1 && $res2 ?
+                $res1 :
                 false;
         } catch (\Exception $e) {
             logError('存储个人信息失败！', [$e->getMessage()]);
@@ -116,7 +128,8 @@ class User extends Model
                     'user_phone',
                     'user_sex',
                     'user_birthday',
-                    'user_qq'
+                    'user_qq',
+                    'user_sign'
                 ])
                 ->get();
            return $res ?
@@ -384,12 +397,18 @@ class User extends Model
     }
 
     /**
-     * 登录时获取基本信息和评论的新消息数
+     * 登录时获取用户基本信息、评论的新消息数、个性化设置
      * @param $user_id
      * @return array|false
      */
-    public static function getinfo($user_id){
+    public static function getinfo($user_id,$avatar){
         try {
+
+            $updateimage = self::where('user_id',$user_id)
+                ->update([
+                    'user_image' => $avatar
+                ]);
+
             $res['user_nickname'] = self::where('user_id',$user_id)
                 ->select([
                     'user_nickname'
@@ -400,6 +419,17 @@ class User extends Model
                     'user_sign'
                 ])
                 ->value('user_sign');
+            $res['background_id'] = Personality::where('user_id',$user_id)
+                ->select([
+                    'background_id'
+                ])
+                ->value('background_id');
+            $res['flower_id'] = Personality::where('user_id',$user_id)
+                ->select([
+                    'flower_id'
+                ])
+                ->value('flower_id');
+
             $dy_list = Dynamics::where('user_id',$user_id)->pluck('id');
 
             $res['news'] = Comment::select('*')
