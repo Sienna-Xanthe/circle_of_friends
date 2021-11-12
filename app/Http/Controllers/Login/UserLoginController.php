@@ -36,6 +36,9 @@ class UserLoginController extends Controller
         $name = $detail['result']['name'];//name
 //        echo "avatar: ".$avatar."\n";
 //        echo "name: ".$name."\n";
+        if($avatar == null){
+            $avatar = "http://pengxingyi.oss-cn-beijing.aliyuncs.com/2021-11/11/8090phpAtvyAf1636638460211111.png";
+        }
         $userinfo['user_id'] = $unionid;//
         $userinfo['user_image'] = $avatar;
         $userinfo['user_name'] = $name;
@@ -50,7 +53,7 @@ class UserLoginController extends Controller
             $is_disable = User::is_disable($unionid);
             if($is_disable == 1)
             {
-                $userinfo = User::getinfo($unionid);
+                $userinfo = User::getinfo($unionid,$avatar);
                 $userinfo['user_id'] = $unionid;//
                 $userinfo['user_image'] = $avatar;
                 $userinfo['user_name'] = $name;
@@ -73,9 +76,23 @@ class UserLoginController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function registered(UserRegisteredRequest $request){
-        return User::informationforfirst($request) ?
-            json_success('存储成功!', null, 200) :
+        $res['user_id'] = $request['user_id'];
+        $res['user_image'] = $request['user_image'];
+        $res['user_name'] = $request['user_name'];
+        $res['user_sex'] = $request['user_sex'];
+        $res['user_birthday'] = $request['user_birthday'];
+        $res['user_phone'] = $request['user_phone'];
+        $res['user_qq'] = $request['user_qq'];
+        $res['background_id'] = 4;
+        $res['flower_id'] = 2;
+        if(User::informationforfirst($request))
+        {
+            return json_success('存储成功!', $res, 200) ;
+
+        }
+        return
             json_success('存储失败!', null, 100);
+
     }
 
 
