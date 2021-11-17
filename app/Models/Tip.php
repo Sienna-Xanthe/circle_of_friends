@@ -60,7 +60,7 @@ class Tip extends Model
                     'tip.created_at',
                     'tip_state'
                 ])
-                ->paginate(5);
+                ->get();
             return $res ?
                 $res :
                 false;
@@ -90,7 +90,7 @@ class Tip extends Model
                     'tlabel.tlabel_name',
                     'tip.created_at',
                     'tip_state'
-                ])->paginate(5);
+                ]) ->get();
             return $res ?
                 $res :
                 false;
@@ -120,7 +120,7 @@ class Tip extends Model
                     'tlabel.tlabel_name',
                     'tip.created_at',
                     'tip_state'
-                ])->paginate(5);
+                ]) ->get();
             return $res ?
                 $res :
                 false;
@@ -150,7 +150,7 @@ class Tip extends Model
                     'tlabel.tlabel_name',
                     'tip.created_at',
                     'tip_state'
-                ])->paginate(5);
+                ]) ->get();
             return $res ?
                 $res :
                 false;
@@ -182,7 +182,7 @@ class Tip extends Model
                     'tlabel.tlabel_name',
                     'tip.created_at',
                     'tip_state'
-                ])->paginate(5);
+                ]) ->get();
             return $res ?
                 $res :
                 false;
@@ -212,7 +212,7 @@ class Tip extends Model
                     'tlabel.tlabel_name',
                     'tip.created_at',
                     'tip_state'
-                ])->paginate(5);
+                ]) ->get();
             return $res ?
                 $res :
                 false;
@@ -241,7 +241,7 @@ class Tip extends Model
                     'tlabel.tlabel_name',
                     'tip.created_at',
                     'tip_state'
-                ])->paginate(5);
+                ]) ->get();
             return $res ?
                 $res :
                 false;
@@ -270,7 +270,7 @@ class Tip extends Model
                     'tlabel.tlabel_name',
                     'tip.created_at',
                     'tip_state'
-                ])->paginate(5);
+                ]) ->get();
             return $res ?
                 $res :
                 false;
