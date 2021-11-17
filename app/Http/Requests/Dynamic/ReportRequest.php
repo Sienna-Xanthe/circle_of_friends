@@ -30,6 +30,7 @@ class ReportRequest extends FormRequest
             'id'        => 'required',
             'tlabel_id'        => 'required',
             'informant_name'        => 'required',
+            'tip_reason'        => 'required',
         ];
     }
     protected function failedValidation(Validator $validator){

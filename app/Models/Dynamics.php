@@ -592,4 +592,101 @@ class Dynamics extends Model
             return false;
         }
     }
+
+
+    /**
+     * 用户进入他人主页查看他人动态
+     * @author zqz
+     * @param $user_id_one
+     * @param $user_id_two
+     * @param $dlabel_id
+     * @param $date
+     * @return array|false
+     */
+    public static function establishphoto12($user_id_one,$user_id_two,$dlabel_id,$date)
+    {
+        try {
+
+            //如果不传参，则查询所有的动态
+            if ($dlabel_id==null && $date==null){
+
+                //查询该用户发的动态id
+                $b=self::where('user_id',$user_id_two)->pluck('id');
+                foreach ($b as $value){
+                    //获取该动态的评论数量
+                    $res['b'][]=Comment::select('id')->where('dynamics_id',$value)->count();
+                    //获取该动态的点赞数量
+                    $res['c'][]=Likes::select('id')->where('dynamics_id',$value)->count();
+                    //判断该条动态是否点赞
+                    $res['d'][]=Likes::where('user_id',$user_id_one)->where('dynamics_id',$value)->exists();
+                    //判断该条动态是否收藏
+                    $res['e'][]=Collection::where('user_id',$user_id_one)->where('dynamics_id',$value)->exists();
+
+                }
+                $res['a'] = self::with('user','url','comment')
+                    ->whereIn('id',$b)->get();
+
+                //根据动态标签查看动态
+            }elseif ($dlabel_id!=null && $date==null){
+                //查询该用户发的动态id
+                $b=self::where('user_id',$user_id_two)->where('dlabel_id',$dlabel_id)->pluck('id');
+                foreach ($b as $value){
+                    //获取该动态的评论数量
+                    $res['b'][]=Comment::select('id')->where('dynamics_id',$value)->count();
+                    //获取该动态的点赞数量
+                    $res['c'][]=Likes::select('id')->where('dynamics_id',$value)->count();
+                    //判断该条动态是否点赞
+                    $res['d'][]=Likes::where('user_id',$user_id_one)->where('dynamics_id',$value)->exists();
+                    //判断该条动态是否收藏
+                    $res['e'][]=Collection::where('user_id',$user_id_one)->where('dynamics_id',$value)->exists();
+
+                }
+                $res['a'] = self::with('user','url','comment')
+                    ->whereIn('id',$b)->get();
+
+                //根据日期查询所有的动态
+            }elseif ($dlabel_id == null && $date != null){
+
+                //查询该用户发的动态id
+                $b=self::where('user_id',$user_id_two)->where('created_at','like','%'.$dlabel_id.'%')->pluck('id');
+                foreach ($b as $value){
+                    //获取该动态的评论数量
+                    $res['b'][]=Comment::select('id')->where('dynamics_id',$value)->count();
+                    //获取该动态的点赞数量
+                    $res['c'][]=Likes::select('id')->where('dynamics_id',$value)->count();
+                    //判断该条动态是否点赞
+                    $res['d'][]=Likes::where('user_id',$user_id_one)->where('dynamics_id',$value)->exists();
+                    //判断该条动态是否收藏
+                    $res['e'][]=Collection::where('user_id',$user_id_one)->where('dynamics_id',$value)->exists();
+                }
+                $res['a'] = self::with('user','url','comment')
+                    ->whereIn('id',$b)->get();
+                //根据动态标签与日期查询动态
+            }elseif ($dlabel_id != null && $date != null){
+                //查询该用户发的动态id
+                $b=self::where('user_id',$user_id_two)->where('dlabel_id',$dlabel_id)
+                    ->where('created_at','like','%'.$dlabel_id.'%')->pluck('id');
+                foreach ($b as $value){
+                    //获取该动态的评论数量
+                    $res['b'][]=Comment::select('id')->where('dynamics_id',$value)->count();
+                    //获取该动态的点赞数量
+                    $res['c'][]=Likes::select('id')->where('dynamics_id',$value)->count();
+                    //判断该条动态是否点赞
+                    $res['d'][]=Likes::where('user_id',$user_id_one)->where('dynamics_id',$value)->exists();
+                    //判断该条动态是否收藏
+                    $res['e'][]=Collection::where('user_id',$user_id_one)->where('dynamics_id',$value)->exists();
+                }
+                $res['a'] = self::with('user','url','comment')
+                    ->whereIn('id',$b)->get();
+
+            }
+
+            return $res ?
+                $res :
+                false;
+        } catch (\Exception $e) {
+            logError('查询错误', [$e->getMessage()]);
+            return false;
+        }
+    }
 }

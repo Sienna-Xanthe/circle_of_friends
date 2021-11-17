@@ -18,6 +18,7 @@ class UploadController extends Controller
     {
         //获取上传的文件
         $file = $request->file('file');
+        //判断文件类型，如果不是图片会返回false
         $a=exif_imagetype($file);
         //获取上传图片的临时地址
         $tmppath = $file->getRealPath();
@@ -28,13 +29,15 @@ class UploadController extends Controller
         //上传图片到阿里云OSS
         if($a==false){
             $mime = $file->getMimeType();
+            //判断上传文件是不是视频
             if ($mime == "video/x-flv" || $mime == "video/mp4" || $mime == "application/x-mpegURL" || $mime == "video/MP2T" || $mime == "video/3gpp" || $mime == "video/quicktime" || $mime == "video/x-msvideo" || $mime == "video/x-ms-wmv"){
                 OSS::publicUpload('pengxingyi', $pathName, $tmppath, ['ContentType' => $file->getClientMimeType()]);
             }else{
                 return json_fail('文件格式不对', null, 100);
             }
         }else{
-            OSS::publicUpload('pengxingyi', $pathName, $tmppath, ['ContentType' => 'Online']);
+            //文件是图片
+            OSS::publicUpload('pengxingyi', $pathName, $tmppath, ['ContentType' => 'inline']);
         }
         //获取上传图片的Url链接
         $Url = OSS::getPublicObjectURL('pengxingyi', $pathName);
