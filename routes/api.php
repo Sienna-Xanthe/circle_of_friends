@@ -102,6 +102,7 @@ Route::prefix('dynamic')->group(function () {
     Route::get('collection_details', 'Dynamic\DynamicController@collectionDetails');//查看用户收藏动态中的动态详情
     Route::post('fabulous', 'Dynamic\DynamicController@fabulous');//对动态进行点赞或取消点赞
     Route::post('delete_comment', 'Dynamic\DynamicController@deleteComment');//用户删除评论
+    Route::get('others_type', 'Dynamic\DynamicController@othersType');//用户进入他人主页查看他人动态
 });//--zqz
 
 

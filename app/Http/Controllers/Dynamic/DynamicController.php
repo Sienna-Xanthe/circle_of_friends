@@ -10,6 +10,7 @@ use App\Http\Requests\Dynamic\DynamicRequest1;
 use App\Http\Requests\Dynamic\DynamicRequest2;
 use App\Http\Requests\Dynamic\FabulousRequest;
 use App\Http\Requests\Dynamic\MineTypeRequest;
+use App\Http\Requests\Dynamic\OthersTypeRequest;
 use App\Http\Requests\Dynamic\ReportRequest;
 use App\Models\Collection;
 use App\Models\Comment;
@@ -234,6 +235,24 @@ class DynamicController extends Controller
         return $res ?
             json_success('删除成功!', null, 200) :
             json_fail('删除失败!', null, 100);
+    }
+
+    /**
+     * 用户进入他人主页查看他人动态
+     * @zqz
+     * @param OthersTypeRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function othersType(OthersTypeRequest $request)
+    {
+        $user_id_one=$request['user_id_one'];
+        $user_id_two=$request['user_id_two'];
+        $dlabel_id=$request['dlabel_id'];
+        $date=$request['date'];
+        $res=Dynamics::establishphoto12($user_id_one,$user_id_two,$dlabel_id,$date);
+        return $res ?
+            json_success('查询成功!', $res, 200) :
+            json_fail('查询失败!', null, 100);
     }
 
 }
