@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ReportRequest extends FormRequest
+class OthersTypeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,11 +26,8 @@ class ReportRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id'   => 'required',
-            'id'        => 'required',
-            'tlabel_id'        => 'required',
-            'informant_name'        => 'required',
-            'tip_reason'        => 'required',
+            'user_id_one'   => 'required',
+            'user_id_two'   => 'required',
         ];
     }
     protected function failedValidation(Validator $validator){

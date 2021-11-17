@@ -70,7 +70,7 @@ Route::prefix('comment')->group(function () {
 /**
  * 举报信息
  */
-Route::prefix('tip')->group(function () {
+Route::middleware('refreshToken')->prefix('tip')->group(function () {//
     Route::post('showTipInformationByDetail', 'Admin\TipController@showTipInformationByDetail'); //举报信息
     Route::post('showTipInformationByMany', 'Admin\TipController@showTipInformationByMany'); //举报信息
     Route::post('updatefailedTip', 'Admin\TipController@updatefailedTip'); //更新
@@ -102,10 +102,11 @@ Route::prefix('dynamic')->group(function () {
     Route::get('collection_details', 'Dynamic\DynamicController@collectionDetails');//查看用户收藏动态中的动态详情
     Route::post('fabulous', 'Dynamic\DynamicController@fabulous');//对动态进行点赞或取消点赞
     Route::post('delete_comment', 'Dynamic\DynamicController@deleteComment');//用户删除评论
+    Route::get('others_type', 'Dynamic\DynamicController@othersType');//用户进入他人主页查看他人动态
 });//--zqz
 
 
-Route::prefix('admin')->group(function () {
+Route::middleware('refreshToken')->prefix('admin')->group(function () {
     Route::get('user_administration', 'Admin\AdminstrationController@userAdministration');//管理员管理用户
     Route::post('disable', 'Admin\AdminstrationController@disable');//管理员操作用户账号的禁用状态
     Route::get('dynamic_administration', 'Admin\AdminstrationController@dynamicAdministration');//管理员管理查看用户动态
