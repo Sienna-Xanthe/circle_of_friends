@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Comment extends Model
 {
     protected $table = "comment";
-    public $timestamps = true;
+    public $timestamps = false;
     protected $primaryKey = "id";
     protected $guarded = [];
 
@@ -97,7 +97,8 @@ class Comment extends Model
     public static function establishphoto1($user_id,$comment_content,$dynamics_id)
     {
         try {
-
+            $created_at = date("Y-m-d H:i:s",time());
+            $updated_at = date("Y-m-d H:i:s",time());
                 //将id、标签、内容储存在动态表中
                 $res=Comment::create(
                     [
@@ -105,6 +106,8 @@ class Comment extends Model
                         'comment_content'        => $comment_content,
                         'dynamics_id'            => $dynamics_id,
                         'comment_state'          => '1',
+                        'created_at'             => $created_at,
+                        'updated_at'             => $updated_at
                     ]
                 );
 
