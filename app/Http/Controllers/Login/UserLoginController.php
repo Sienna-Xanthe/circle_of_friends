@@ -100,7 +100,7 @@ class UserLoginController extends Controller
     public function scancode()
     {
         //echo "test";
-        return redirect('https://oapi.dingtalk.com/connect/qrconnect?appid=dingyeg1sljjmk0vppsl&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=http://friend.pxy.fit/api/user/login');
+        return redirect('https://oapi.dingtalk.com/connect/qrconnect?appid=dingyeg1sljjmk0vppsl&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=http://127.0.0.1:8000/api/user/login');
     }
     /**
      * 获取access_token
@@ -156,7 +156,7 @@ class UserLoginController extends Controller
         $data      = [ 'unionid' => $unionid ];
         $user = $this->curl_json($url,$data);
         $res       = json_decode($user, true);
-        //var_dump($res);
+//        var_dump($res);
         if(isset($res['errcode']) and $res['errcode'] == 0) {
             $userid = $res['result']['userid'];
             return $userid;
